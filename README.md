@@ -13,3 +13,11 @@ Tasks:
     - In app per jaar. 
  - Publications: API - volgens de doi kan je de impactfactor bepalen. Op een deterministische manier journal uit publicatielijst halen. Leuk om toe te voegen aan impactfactor per samenwerkingseiland. 
     --> op het einde koppelen aan collaborations 
+
+
+Inhoud van onze app 
+- introductie over ons ('The founders') -> foto + kleine beschrijving
+- kaart met contributies 
+- projects in function over time (grafieken)
+- netwerkanalyse 
+- publications -> API 
