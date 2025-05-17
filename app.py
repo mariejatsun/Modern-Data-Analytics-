@@ -2,26 +2,27 @@ from shiny import App, render, ui
 import pandas as pd
 import plotly.express as px
 import seaborn as sns
-import numpy as npq
+import numpy as np
 from shinywidgets import render_widget, output_widget
 
-# Load the iris dataset
-iris = sns.load_dataset("iris")
+#data inladen 
+category_per_year = pd.read_csv("category_per_year")
+category_per_year['Year'] = category_per_year['Year'].astype(int)
+category_per_year['project_count'] = category_per_year['project_count'].astype(int)
+categories = sorted(category_per_year['category'].dropna().unique())
+
 
 # Define UI
 app_ui = ui.page_fluid(
-    ui.panel_title("Nineth app ..."),
+    ui.tags.img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/320px-Flag_of_Europe.svg.png", style="width:100%; max-height:200px; object-fit:cover;"),
     ui.layout_sidebar(
         ui.sidebar(
-            ui.input_select("var", "1. Select the quantitative variable:", 
-                {"sepal_length": "sepal_length", "sepal_width": "sepal_width", "petal_length": "petal_length", "petal_width": "petal_width"}, 
-                selected="petal_length"),
-            ui.input_slider("bin", "2. Select the number of histogram BINs:", 5, 25, 15),
-            ui.input_radio_buttons("colour", "3. Select the color of histogram", ["black", "yellow", "red"], selected="yellow")
+            ui.input_select("category", "Select a category", 
+                {cat: cat for cat in categories}, 
+                selected="engineering and technology"),
         ),
         ui.navset_tab(
-            ui.nav_panel("Panel 1", ui.output_text("text1"), output_widget("myhist")),
-            ui.nav_panel("Panel 2", ui.output_data_frame("summary"))
+            ui.nav_panel("Amount of projects over time", ui.output_ui("category_plot"))
         )
     )
 )
@@ -29,27 +30,20 @@ app_ui = ui.page_fluid(
 # Define Server
 def server(input, output, session):        
     @output
-    @render.text
-    def text1():
-        colm = input.var()
-        return f"The variable of interest is here: {colm}"
-
-    @output
-    @render_widget
-    def myhist():
-        colm = input.var()
-        fig = px.histogram(iris, x=colm, nbins=input.bin(), color_discrete_sequence=[input.colour()])
-        fig.update_layout(title="Histogram of Iris dataset",
-                          xaxis_title=colm.replace("_", " ").title(),
-                          yaxis_title="Count",
-                          template="plotly_white")
-        
-        return fig
+    @render.ui
+    def category_plot():
+        selected_cat = input.category()
+        data = category_per_year[category_per_year['category'] == selected_cat]
+        fig = px.line(
+          data,
+          x='Year',
+          y='project_count',
+         markers=True,
+         title=f'{selected_cat.capitalize()} Projects Over Time',
+         labels={'project_count': 'Aantal projecten'}
+      )
+        fig.update_layout(height=500, margin={"r":0,"t":50,"l":0,"b":0})
+        return ui.HTML(fig.to_html(include_plotlyjs='cdn'))
     
-    @output
-    @render.data_frame
-    def summary():
-        return iris.describe()
-
 # Create app
 app = App(app_ui, server)
