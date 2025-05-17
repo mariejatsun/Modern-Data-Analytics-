@@ -4,6 +4,7 @@ import plotly.express as px
 import seaborn as sns
 import numpy as np
 from shinywidgets import render_widget, output_widget
+import base64
 
 #data inladen 
 category_per_year = pd.read_csv("category_per_year")
@@ -11,10 +12,18 @@ category_per_year['Year'] = category_per_year['Year'].astype(int)
 category_per_year['project_count'] = category_per_year['project_count'].astype(int)
 categories = sorted(category_per_year['category'].dropna().unique())
 
+#afbeelding
+def get_image_base64(path):
+    with open(path, "rb") as f: 
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+    return f"data:image/jpg;base64,{encoded}"  # of png
 
 # Define UI
 app_ui = ui.page_fluid(
-    ui.tags.img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/320px-Flag_of_Europe.svg.png", style="width:100%; max-height:200px; object-fit:cover;"),
+    ui.tags.img(
+        src=get_image_base64("www/banner3.jpg"),  # pas pad aan indien nodig
+        style="width: auto; height: auto; max-width: 50%; display: block; margin: auto;"
+    ),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_select("category", "Select a category", 
