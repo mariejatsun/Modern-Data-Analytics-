@@ -1,9 +1,11 @@
 # MDA
 Project: Analyse Horizon 2020 and 2024 dataset
 
-Tasks: 
-- Check missing values and duplicates --> jana maandag 
-- Landen koppelen aan volledige naam (NaN - al opgelost --> er staan al getallen)
+Tasks Done: 
+- Check missing values and duplicates 
+- Landen koppelen aan volledige naam 
+
+To Do: 
 - rest van de nodige info uit de datasets halen: publications, (role, coordination)
 - Sebastian: map (ecContribution per land plotten of andere vars)
 - Netwerkanalyse: Collaborations 
