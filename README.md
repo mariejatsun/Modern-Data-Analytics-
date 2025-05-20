@@ -8,6 +8,7 @@ Tasks Done:
 To Do: 
 - rest van de nodige info uit de datasets halen: publications, (role, coordination)
 - Sebastian: map (ecContribution per land plotten of andere vars)
+- Analyse per jaar grafiekjes fixen: categories
 - Netwerkanalyse: Collaborations 
     - Dikte van een lijn representeert aantal samenwerkingen 
     - Fake variabele: afstand tussen twee landen is hoeveel samenwerkingen er zijn 
