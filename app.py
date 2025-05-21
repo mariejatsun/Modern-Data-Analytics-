@@ -7,7 +7,6 @@ from shinywidgets import render_widget, output_widget
 import base64
 import pycountry
 
-
 #data inladen 
 category_per_year = pd.read_csv("category_per_year")
 category_per_year['Year'] = category_per_year['Year'].astype(int)
@@ -53,7 +52,7 @@ app_ui = ui.page_fluid(
     )
 )
 
-# Server
+# Server 
 def server(input, output, session):
     @output
     @render.ui
@@ -93,6 +92,7 @@ def server(input, output, session):
         fig.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}, height=600)
 
         return ui.HTML(fig.to_html(include_plotlyjs='cdn'))
+    
 
 
 # App maken
