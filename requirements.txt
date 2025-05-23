@@ -7,3 +7,4 @@ plotly
 ipywidgets
 scikit-learn
 nbformat
+seaborn
