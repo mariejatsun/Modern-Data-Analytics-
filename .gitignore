@@ -1,5 +1,6 @@
-cordis-h2020projects-csv/projectPublications2020.csv
-cordis-HORIZONprojects-csv/projectPublications2024.csv
+data/cordis-h2020projects-csv/projectPublications2020.csv
+data/cordis-HORIZONprojects-csv/projectPublications2024.csv
 data/cordis-HORIZONprojects-csv/updated_publications_with_citations_2024.csv
 data/cordis-h2020projects-csv/updated_publications_with_citations_2020.csv
 data/.DS_Store
+.DS_Store
