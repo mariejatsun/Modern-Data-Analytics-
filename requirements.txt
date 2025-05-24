@@ -8,3 +8,4 @@ ipywidgets
 scikit-learn
 nbformat
 seaborn
+statsmodels
