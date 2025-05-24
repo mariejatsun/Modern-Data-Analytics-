@@ -9,3 +9,6 @@ scikit-learn
 nbformat
 seaborn
 statsmodels
+
+shiny
+shinywidgets
