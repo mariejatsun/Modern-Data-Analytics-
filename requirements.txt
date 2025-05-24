@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+pycountry
+countryinfo
+plotly
+ipywidgets
+scikit-learn
+nbformat
+seaborn
+statsmodels
