@@ -1,4 +1,4 @@
-from shiny import App, render, ui, reactive
+from shiny import App, render, ui
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -70,13 +70,10 @@ app_ui = ui.page_fluid(
             ui.output_ui("funding_map")
         ), 
         ui.nav_panel("Clustering"),
-        ui.nav_panel("Network analysis", 
-            ui.input_slider("cluster_years", "Select year range", min=min(years), max=max(years), value=(2014, 2020), step=1),
-            ui.input_numeric("n_clusters", "Number of clusters", value=1, min=1, max=4),
-            ui.output_ui("country_selector"),  
+        ui.nav_panel("Network analysis", ui.input_slider("cluster_years", "Select year range", min=min(years), max= max(years), value=(2014, 2020), step=1),
+            ui.input_numeric("n_clusters", "Number of clusters", value = 1, min=1, max=4),
             ui.output_ui("network_map"),
-            ui.output_ui("cluster_links"),
-        ),
+            ui.output_ui("cluster_links")),
         ui.nav_panel("Research impact - citations"),
         ui.nav_panel("Exploratory data analysis")
     )
@@ -167,7 +164,6 @@ def server(input, output, session):
     @output
     @render.ui
     def network_map():
-        _ = input.visible_countries()
         start_year, end_year = input.cluster_years()  
         n_clusters = input.n_clusters()
 
@@ -205,20 +201,12 @@ def server(input, output, session):
             lat, lon = get_lat_lon_from_iso2(c)
             if lat is not None and lon is not None:
                 coords[c] = (lat, lon)
-        # valid_countries = [c for c in clusters_df['country'] if c in coords]
-
-        all_countries = [c for c in clusters_df['country'] if c in coords]
-        visible_countries = input.visible_countries()
-        if not visible_countries:
-            # fallback naar alle landen, maar ga verder
-            visible_countries = all_countries
-
-
+        valid_countries = [c for c in clusters_df['country'] if c in coords]
 
         lines = []
         max_weight = 0
-        for i, c1 in enumerate(visible_countries):
-            for j, c2 in enumerate(visible_countries):
+        for i, c1 in enumerate(valid_countries):
+            for j, c2 in enumerate(valid_countries):
                 if j <= i:
                     continue
                 weight = network_df.loc[c1, c2]
@@ -269,62 +257,6 @@ def server(input, output, session):
         )
 
         return ui.HTML(fig.to_html(include_plotlyjs="cdn"))
-    
-    @reactive.Effect
-    def update_country_checkboxes():
-        start_year, end_year = input.cluster_years()
-        n_clusters = input.n_clusters()
-
-        project_ids = df_project[
-            (df_project['startYear'] >= start_year) &
-            (df_project['startYear'] <= end_year)
-            ]['id']
-        df_filtered_org = df_organization[df_organization['projectID'].isin(project_ids)]
-
-        if df_filtered_org.empty:
-            session.send_input_message("visible_countries", {"choices": [], "selected": []})
-            return
-
-
-        from definitions import country_network_matrices, cluster_dataframe
-        from countryinfo import CountryInfo
-
-        def get_lat_lon_from_iso2(iso2):
-            try:
-                info = CountryInfo(iso2)
-                latlng = info.latlng()
-                if latlng and len(latlng) == 2:
-                    return latlng[0], latlng[1]
-            except Exception:
-                pass
-            return None, None
-
-        network_df, dissimilarity_df = country_network_matrices(df_filtered_org)
-        clusters_df = cluster_dataframe(dissimilarity_df, KMeans(n_clusters=n_clusters, n_init="auto", random_state=42), "K-means")
-        coords = {
-            c: get_lat_lon_from_iso2(c)
-            for c in clusters_df['country']
-            if get_lat_lon_from_iso2(c)[0] is not None
-        }
-        visible_countries = list(coords.keys())
-        print("Checkboxlanden:", visible_countries)
-
-        session.send_input_message("visible_countries", {
-        "choices": visible_countries,
-        "selected": visible_countries
-        })
-
-    @output
-    @render.ui
-    def country_selector():
-        return ui.input_checkbox_group(
-            "visible_countries",
-            "Select countries to display",
-            choices=[],
-            selected=[]
-        )
-
-
 
 
 
