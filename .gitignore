@@ -5,4 +5,4 @@ data/cordis-h2020projects-csv/updated_publications_with_citations_2020.csv
 __pycache__/
 data/.DS_Store
 .DS_Store
-df_project.csv
+data/df_project.csv
