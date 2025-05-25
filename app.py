@@ -10,17 +10,17 @@ from sklearn.cluster import AgglomerativeClustering
 import countryinfo
 
 # Data inladen 
-category_per_year = pd.read_csv("category_per_year")
+category_per_year = pd.read_csv("./data/category_per_year.csv")
 category_per_year['Year'] = category_per_year['Year'].astype(int)
 category_per_year['project_count'] = category_per_year['project_count'].astype(int)
 categories = sorted(category_per_year['category'].dropna().unique())
-merged_funding = pd.read_csv("merged_funding.csv")
-category_counts = pd.read_csv("category_counts.csv")  
+merged_funding = pd.read_csv("./data/merged_funding.csv")
+category_counts = pd.read_csv("./data/category_counts.csv")  
 years = sorted(category_counts['startYear'].dropna().unique())
-df_organization= pd.read_csv("df_organization.csv", low_memory=False)
-df_project= pd.read_csv("df_project.csv")
-category_year_stats = pd.read_csv("category_year_stats.csv")
-citations_per_topic_year = pd.read_csv("citations_per_topic_year.csv")
+df_organization= pd.read_csv("./data/df_organization.csv", low_memory=False)
+df_project= pd.read_csv("./data/df_project.csv")
+category_year_stats = pd.read_csv("./data/category_year_stats.csv")
+citations_per_topic_year = pd.read_csv("./data/citations_per_topic_year.csv")
 
 # Voor landencodes
 def convert_iso2_to_iso3(iso2_code):
