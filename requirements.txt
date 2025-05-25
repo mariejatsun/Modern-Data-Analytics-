@@ -6,6 +6,7 @@ countryinfo
 plotly
 ipywidgets
 scikit-learn
+hdbscan
 nbformat
 seaborn
 statsmodels
