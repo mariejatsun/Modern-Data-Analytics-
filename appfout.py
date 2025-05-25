@@ -139,7 +139,7 @@ def server(input, output, session):
         if df_filtered_org.empty:
             return ui.HTML("<p>No data for selected period.</p>")
 
-        from definitions import country_network_matrices, cluster_dataframe
+        from scripts.definitions import country_network_matrices, cluster_dataframe
 
         network_df, dissimilarity_df = country_network_matrices(df_filtered_org)
         clusters_df = cluster_dataframe(dissimilarity_df, AgglomerativeClustering(n_clusters=5, metric="precomputed", linkage="average"), "Agglomerative")
