@@ -5,10 +5,13 @@ from utils.layout import panel_with_banner
 def research_impact_panel(categories, years):
     return panel_with_banner(
         "Research Impact",
-        ui.input_select("impact_category", "Select Category", {cat: cat for cat in categories}),
-        ui.output_ui("impact_plot"),
-        ui.input_select("impact_year", "Select Year", {str(y): str(y) for y in years}),
-        ui.output_ui("impact_pie")
+        ui.div(
+            ui.input_select("impact_category", "Select Category", {cat: cat for cat in categories}),
+            ui.output_ui("impact_plot"),
+            ui.input_select("impact_year", "Select Year", {str(y): str(y) for y in years}),
+            ui.output_ui("impact_pie"),
+            style="margin-left: 40px; margin-right: 40px;"  # Add your desired margin here
+        )
     )
 
 def register_research_impact_server(output, input, data):

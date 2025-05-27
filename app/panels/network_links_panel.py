@@ -8,12 +8,15 @@ from utils.layout import panel_with_banner
 def network_links_panel(clusters, years):
     return panel_with_banner(
         "Collaboration Network",
-        ui.input_select("network_year_range", "Select a year", 
-                        {f"{y}": f"{y}" for y in years}, 
-                        selected=f"{years[0]}"),
-        ui.input_select("network_cluster", "Select cluster", 
-                        {str(c): str(c) for c in clusters}),
-        ui.output_ui("network_links_plot")
+        ui.div(
+            ui.input_select("network_year_range", "Select a year", 
+                            {f"{y}": f"{y}" for y in years}, 
+                            selected=f"{years[0]}"),
+            ui.input_select("network_cluster", "Select cluster", 
+                            {str(c): str(c) for c in clusters}),
+            ui.output_ui("network_links_plot"),
+            style="margin-left: 40px; margin-right: 40px;"  # Add your desired margin here
+        )
     )
 
 def register_network_links_server(output, input, data):

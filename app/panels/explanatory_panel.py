@@ -9,18 +9,21 @@ from utils.layout import panel_with_banner
 
 def explanatory_data_panel(categories):
     return panel_with_banner(
-        "Explanatory Data",
-        ui.h4("Histograms"),
-        ui.output_plot("histograms"),
-        ui.h4("Correlation Heatmap"),
-        ui.output_plot("correlation"),
-        ui.h4("General Regression Line"),
-        ui.output_plot("regression_general"),
-        ui.h4("Regression Lines per Research Category"),
-        ui.input_select("category_exp", "Category", {c: c for c in categories}),
-        ui.output_plot("regression_category"),
-        ui.h4("All Categories: Regression Lines"),
-        ui.output_plot("regression_all_categories")
+        "Explanatory Analysis",
+        ui.div(
+            ui.h4("Histograms"),
+            ui.output_plot("histograms"),
+            ui.h4("Correlation Heatmap"),
+            ui.output_plot("correlation"),
+            ui.h4("General Regression Line"),
+            ui.output_plot("regression_general"),
+            ui.h4("Regression Lines per Research Category"),
+            ui.input_select("category_exp", "Category", {c: c for c in categories}),
+            ui.output_plot("regression_category"),
+            ui.h4("All Categories: Regression Lines"),
+            ui.output_plot("regression_all_categories"),
+            style="margin-left: 40px; margin-right: 40px;"  # Add your desired margin here
+        )
     )
 
 def register_explanatory_data_server(output, input, data):

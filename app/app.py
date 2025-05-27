@@ -2,7 +2,7 @@ from shiny import App, ui
 import pandas as pd
 
 # Import panel UI and server registration functions
-from panels.analyse_panel import analyse_panel, register_analyse_server
+from panels.categories_panel import categories_panel, register_categories_server
 from panels.funding_map_panel import funding_map_panel, register_funding_map_server
 from panels.clustering_panel import clustering_panel, register_clustering_server
 from panels.network_links_panel import network_links_panel, register_network_links_server
@@ -35,7 +35,7 @@ df_regression = pd.read_csv("data/regression_dataset.csv")
 app_ui = ui.page_fluid(
     ui.navset_tab(
         introduction_panel(),
-        analyse_panel(categories, years),
+        categories_panel(categories, years),
         funding_map_panel(years),
         clustering_panel(years, ["K-means", "Agglomerative", "HDBSCAN"]),
         topological_data_analysis_panel(),
@@ -61,7 +61,7 @@ def server(input, output, session):
         "categories": categories,
         "df_regression": df_regression
     }
-    register_analyse_server(output, input, data)
+    register_categories_server(output, input, data)
     register_funding_map_server(output, input, data)
     register_clustering_server(output, input, data)
     register_network_links_server(output, input, data)

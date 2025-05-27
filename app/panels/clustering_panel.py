@@ -11,9 +11,12 @@ from utils.layout import panel_with_banner
 def clustering_panel(years, methods):
     return panel_with_banner(
         "Clustering",
-        ui.input_select("clustering_year", "Select year", {str(y): str(y) for y in years}),
-        ui.input_select("clustering_method", "Select method", {m: m for m in methods}),
-        ui.output_ui("clustering_plot")
+        ui.div(
+            ui.input_select("clustering_year", "Select year", {str(y): str(y) for y in years}),
+            ui.input_select("clustering_method", "Select method", {m: m for m in methods}),
+            ui.output_ui("clustering_plot"),
+            style="margin-left: 40px; margin-right: 40px;"  # Add your desired margin here
+        )
     )
 
 def register_clustering_server(output, input, data):

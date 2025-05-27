@@ -2,18 +2,21 @@ from shiny import ui, render
 import plotly.express as px
 from utils.layout import panel_with_banner
 
-def analyse_panel(categories, years):
+def categories_panel(categories, years):
     return panel_with_banner(
-        "Analysis of research projects",
-        ui.input_select("category", "Select a category",
-                        {cat: cat for cat in categories},
-                        selected="engineering and technology"),
-        ui.output_ui("category_plot"),
-        ui.input_select("pie_year", "Select year for pie chart", {str(y): str(y) for y in years}),
-        ui.output_ui("pie_chart")
+        "Research Categories",
+        ui.div(
+            ui.input_select("category", "Select a category",
+                            {cat: cat for cat in categories},
+                            selected="engineering and technology"),
+            ui.output_ui("category_plot"),
+            ui.input_select("pie_year", "Select year for pie chart", {str(y): str(y) for y in years}),
+            ui.output_ui("pie_chart"),
+            style="margin-left: 40px; margin-right: 40px;"  # Add your desired margin here
+        )
     )
 
-def register_analyse_server(output, input, data):
+def register_categories_server(output, input, data):
     category_per_year = data["category_per_year"]
     category_counts = data["category_counts"]
 

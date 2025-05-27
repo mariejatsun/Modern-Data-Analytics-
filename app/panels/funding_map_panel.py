@@ -8,8 +8,11 @@ from utils.methods import iso3_to_name, convert_iso2_to_iso3
 def funding_map_panel(years):
     return panel_with_banner(
         "Funding Map",
-        ui.input_slider("funding_year_range", "Select Year Range", min(years), max(years), value=(min(years), max(years))),
-        ui.output_ui("funding_map")
+        ui.div(
+            ui.input_slider("funding_year_range", "Select Year Range", min(years), max(years), value=(min(years), max(years))),
+            ui.output_ui("funding_map"),
+            style="margin-left: 40px; margin-right: 40px;"  # Add your desired margin here
+        )
     )
 
 def register_funding_map_server(output, input, data):
