@@ -8,7 +8,7 @@ from utils.layout import panel_with_banner
 def network_links_panel(clusters, years):
     return panel_with_banner(
         "Collaboration Network",
-        ui.input_select("network_year_range", "Select year range", 
+        ui.input_select("network_year_range", "Select a year", 
                         {f"{y}": f"{y}" for y in years}, 
                         selected=f"{years[0]}"),
         ui.input_select("network_cluster", "Select cluster", 

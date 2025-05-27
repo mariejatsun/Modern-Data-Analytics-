@@ -10,9 +10,9 @@ from panels.research_impact_panel import research_impact_panel, register_researc
 from panels.explanatory_panel import explanatory_data_panel, register_explanatory_data_server
 from panels.topological_data_analysis_panel import topological_data_analysis_panel
 
+
 # Optionally: introduction_panel and its server, if you have them
 from panels.introduction_panel import introduction_panel
-
 
 # Data loading
 category_per_year = pd.read_csv("./data/category_per_year.csv")
@@ -74,3 +74,6 @@ def server(input, output, session):
 
 # App creation
 app = App(app_ui, server) 
+
+
+

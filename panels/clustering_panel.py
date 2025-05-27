@@ -3,7 +3,10 @@ import plotly.express as px
 from sklearn.cluster import KMeans, AgglomerativeClustering
 import hdbscan
 import pandas as pd
+from utils.methods import convert_iso2_to_iso3, iso3_to_name
 from utils.layout import panel_with_banner
+
+
 
 def clustering_panel(years, methods):
     return panel_with_banner(
@@ -17,12 +20,6 @@ def register_clustering_server(output, input, data):
     df_project = data["df_project"]
     df_organization = data["df_organization"]
 
-    def iso2_to_iso3(code):
-        import pycountry
-        try:
-            return pycountry.countries.get(alpha_2=code).alpha_3
-        except:
-            return None
 
     def country_network_matrices(df, id_col='projectID', country_col='country'):
         import numpy as np
@@ -54,7 +51,7 @@ def register_clustering_server(output, input, data):
                 "country": dissimilarity_df.index,
                 "cluster": algo.labels_.astype(str)
             })
-            .assign(iso_alpha=lambda df: df["country"].map(iso2_to_iso3))
+            .assign(iso_alpha=lambda df: df["country"].map(convert_iso2_to_iso3))
             .dropna(subset=["iso_alpha"])
         )
 
