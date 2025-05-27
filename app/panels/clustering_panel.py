@@ -69,8 +69,6 @@ def register_clustering_server(output, input, data):
                         showcoastlines=True, coastlinecolor="Gray")
         fig.update_layout(
             margin=dict(r=0, l=0, t=50, b=0),
-            height=400,   # Set desired height in px
-            width=600     # Set desired width in px
         )
         return fig
 
