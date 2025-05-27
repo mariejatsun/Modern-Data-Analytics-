@@ -82,7 +82,7 @@ def register_network_links_server(output, input, data):
                 else:
                     t = (val - min_w) / (max_w - min_w)
                 alpha = 0.1 + 0.9 * t
-                return f'rgba(220, 20, 60, {alpha:.2f})'  # Crimson red
+                return f'rgba(220, 20, 60, {alpha:.2f})'  
 
             for link in lines:
                 color = get_rgba(link['weight'])
@@ -91,7 +91,7 @@ def register_network_links_server(output, input, data):
                     lat=[link['from_lat'], link['to_lat']],
                     mode='lines',
                     line=dict(width=3, color=color),
-                    opacity=1.0,  # Opacity handled by RGBA
+                    opacity=1.0,  
                     showlegend=False,
                     hoverinfo='text',
                     text=f"{link['from']}–{link['to']}: {link['weight']}"

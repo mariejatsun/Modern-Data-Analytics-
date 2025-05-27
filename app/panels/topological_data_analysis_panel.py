@@ -7,7 +7,7 @@ def topological_data_analysis_panel():
         return ui.div(
             ui.h4(title, style="text-align: center; margin-top: 30px;"),
             ui.tags.img(
-                src=get_image_base64(f"www/{filename}.jpg"),
+                src=get_image_base64(f"app/www/{filename}.jpg"),
                 style="width: 90%; height: auto; display: block; margin: 0 auto; margin-bottom: 40px;"
             )
         )
