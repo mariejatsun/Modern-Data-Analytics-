@@ -11,6 +11,11 @@ The datasets used in this repository were downloaded form the official Horizon p
 - project
 - projectPublications 
 
+> ⚠️ **Note:** Some of the datasets are larger than 100MB and are therefore excluded from the GitHub repository due to upload size limits.  
+> You can download these files manually via the following link and place them in the `data/` folder of the project:  
+> [Download large datasets](<https://kuleuven-my.sharepoint.com/:f:/g/personal/jana_swaans_student_kuleuven_be/EhCXXS87Ac5AjALggniR3XkBHPz_VPfiTw7KCy90ZrQmfw?e=1yhzbS>)
+
+
 ### Repository structure 
 - app/
     - contains the app.py, which is the main entry point of the web application.
