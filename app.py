@@ -1,268 +1,70 @@
-from shiny import App, render, ui
+from shiny import App, ui
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import seaborn as sns
-import numpy as np
-import base64
-import pycountry
-from sklearn.cluster import AgglomerativeClustering
-import countryinfo
 
-# Data inladen 
+# Import panel UI and server registration functions
+from panels.analyse_panel import analyse_panel, register_analyse_server
+from panels.funding_map_panel import funding_map_panel, register_funding_map_server
+from panels.clustering_panel import clustering_panel, register_clustering_server
+from panels.network_links_panel import network_links_panel, register_network_links_server
+from panels.research_impact_panel import research_impact_panel, register_research_impact_server
+from panels.explanatory_panel import explanatory_data_panel, register_explanatory_data_server
+
+# Optionally: introduction_panel and its server, if you have them
+from panels.introduction_panel import introduction_panel
+
+# Data loading
 category_per_year = pd.read_csv("./data/category_per_year.csv")
 category_per_year['Year'] = category_per_year['Year'].astype(int)
 category_per_year['project_count'] = category_per_year['project_count'].astype(int)
 categories = sorted(category_per_year['category'].dropna().unique())
-merged_funding = pd.read_csv("./data/merged_funding.csv")
 category_counts = pd.read_csv("./data/category_counts.csv")  
 years = sorted(category_counts['startYear'].dropna().unique())
-df_organization= pd.read_csv("./data/df_organization.csv", low_memory=False)
-df_project= pd.read_csv("./data/df_project.csv")
+merged_funding = pd.read_csv("./data/merged_funding.csv")
+df_organization = pd.read_csv("./data/df_organization.csv", low_memory=False)
+df_project = pd.read_csv("./data/df_project.csv")
 category_year_stats = pd.read_csv("./data/category_year_stats.csv")
 citations_per_topic_year = pd.read_csv("./data/citations_per_topic_year.csv")
-
-# Voor landencodes
-def convert_iso2_to_iso3(iso2_code):
-    try:
-        return pycountry.countries.get(alpha_2=iso2_code).alpha_3
-    except:
-        return None
-
-def iso3_to_name(iso3):
-    try:
-        return pycountry.countries.get(alpha_3=iso3).name
-    except:
-        return iso3 
-
-# Afbeelding
-def get_image_base64(path):
-    with open(path, "rb") as f: 
-        encoded = base64.b64encode(f.read()).decode("utf-8")
-    return f"data:image/jpg;base64,{encoded}"
-
-def get_lat_lon_from_iso2(iso2):
-    try:
-        info = countryinfo.CountryInfo(iso2)
-        latlng = info.latlng()
-        if latlng and len(latlng) == 2:
-            return latlng[0], latlng[1]
-    except Exception:
-        pass
-    return None, None
+cluster_df = pd.read_csv("./data/clusters_df.csv")  # Assuming this is the clustering data
+clusters = sorted(cluster_df['cluster'].dropna().unique())
+network_df = pd.read_csv("./data/network_df.csv", index_col=0)  # Assuming this is the network data
+df_regression = pd.read_csv("./data/regression_dataset.csv")  # Assuming this is the regression data
 
 # UI
 app_ui = ui.page_fluid(
-    ui.tags.img(
-        src=get_image_base64("www/banner3.jpg"),
-        style="width: auto; height: auto; max-width: 50%; display: block; margin: auto;"
-    ),
     ui.navset_tab(
-        ui.nav_panel(
-                "Introduction",
-                ui.div(
-                    {"style": "display: flex; justify-content: space-around; margin-top: 30px;"},
-                    *[
-                        ui.div(
-                            ui.tags.img(
-                                src=get_image_base64(f"www/{naam}.jpg"),
-                                style="width: 150px; height: auto; border-radius: 50%;"
-                            ),
-                            ui.p(naam, style="text-align: center; font-weight: bold;"),
-                            ui.p(opleiding, style="text-align: center; font-size: 14px;")
-                        )
-                        for naam, opleiding in [
-                            ("Sebastian", "2nd master civil engineering"),
-                            ("Marie", "2nd master bio-engineering"),
-                            ("Lin", "2nd master bio-engineering"),
-                            ("Jana", "2nd master bio-engineering"),
-                        ]
-                    ]
-                ),
-                ui.hr(),
-                ui.div(
-                    ui.p(
-                        "Welcome to our Horizon analysis web app. This web application presents an interactive analysis of EU-funded"
-                        "research projects under the Horizon 2020 and Horizon Europe programmes. By comparing data from both initiatives,"
-                        "this platform highlights evolving research proiorities, funding distribution, international collaborations and scientific impact."
-                        "Use the navigation tabs above to explore the data through dynamic visualisations."
-                    ),
-                    style="margin: 30px auto; max-width: 700px; text-align: center; font-size: 15px;"
-                )
-            ),
-
-
-
-
-        ui.nav_panel(
-            "Analyse of research projects",
-            ui.input_select("category", "Select a category",
-                            {cat: cat for cat in categories},
-                            selected="engineering and technology"),
-            ui.output_ui("category_plot"),
-            ui.input_select("pie_year", "Select year for pie chart", {str(y): str(y) for y in years}),
-            ui.output_ui("pie_chart")
-        ),
-        ui.nav_panel(
-            "Funding levels map",
-            ui.input_slider(
-                "map_years",
-                "Select year range",
-                min=int(min(years)),
-                max=int(max(years)),
-                value=(int(min(years)), int(max(years))),
-                step=1,
-            ),
-            ui.output_ui("funding_map")
-        ), 
-        ui.nav_panel("Clustering"),
-        ui.nav_panel("Network analysis"),
-        ui.nav_panel("Research impact - citations", ui.input_select("citation_category", "Select a category",
-                    {cat: cat for cat in categories},
-                    selected=categories[0] if categories else None),
-    ui.output_ui("citation_plot"), ui.input_select("citation_year", "Select year", {str(y): str(y) for y in years}),
-    ui.output_ui("citation_pie")
-),
-        ui.nav_panel("Exploratory data analysis")
+        introduction_panel(),
+        analyse_panel(categories, years),
+        funding_map_panel(years),
+        clustering_panel(years, ["K-means", "Agglomerative", "HDBSCAN"]),
+        network_links_panel(clusters, years),
+        research_impact_panel(categories, years),
+        explanatory_data_panel(categories)
     )
 )
 
-
 def server(input, output, session):
-    @output
-    @render.ui
-    def category_plot():
-        selected_cat = input.category()
-        data = category_per_year[category_per_year['category'] == selected_cat]
-        fig = px.line(
-            data,
-            x='Year',
-            y='project_count',
-            markers=True,
-            title=f'{selected_cat.capitalize()} Projects Over Time',
-            labels={'project_count': 'Aantal projecten'}
-        )
-        fig.update_layout(height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0})
-        return ui.HTML(fig.to_html(include_plotlyjs='cdn'))
+    # Shared data dictionary for all panels
+    data = {
+        "category_per_year": category_per_year,
+        "category_counts": category_counts,
+        "merged_funding": merged_funding,
+        "df_organization": df_organization,
+        "df_project": df_project,
+        "category_year_stats": category_year_stats,
+        "citations_per_topic_year": citations_per_topic_year,
+        "clusters_df": cluster_df,
+        "network_df": network_df,
+        "years": years,
+        "categories": categories,
+        "df_regression": df_regression
+    }
+    register_analyse_server(output, input, data)
+    register_funding_map_server(output, input, data)
+    register_clustering_server(output, input, data)
+    register_network_links_server(output, input, data)
+    register_research_impact_server(output, input, data)
+    register_explanatory_data_server(output, input, data)
+    # If you have an introduction_panel server, call it here as well
 
-    @output
-    @render.ui
-    def pie_chart():
-        year = input.pie_year()
-        if not year:
-            return ui.HTML("<p>No year selected.</p>")
-        data = category_counts[category_counts['startYear'] == int(year)]
-        if data.empty:
-            return ui.HTML("<p>No data for this year.</p>")
-        fig = px.pie(
-            data,
-            names='category',
-            values='project_count',
-            title=f'Project Distribution by Research Category ({year})',
-            hole=0.3
-        )
-        fig.update_traces(textinfo='percent+label')
-        fig.update_layout(height=500)
-        return ui.HTML(fig.to_html(include_plotlyjs='cdn'))
-    
-    @output
-    @render.ui
-    def funding_map():
-        start_year, end_year = input.map_years()
-        contrib_type = "netEcContribution"
-
-        orgs = df_organization[
-            (df_organization["year"] >= start_year) &
-            (df_organization["year"] <= end_year)
-        ]
-
-        if orgs.empty:
-            return ui.HTML("<p>No data for selected period.</p>")
-
-        funding = orgs.groupby("country")[contrib_type].sum().reset_index()
-        funding.columns = ["country", "funding_sum"]
-        funding["iso_alpha"] = funding["country"].apply(convert_iso2_to_iso3)
-
-        funding["country_name"] = funding["iso_alpha"].apply(iso3_to_name)
-        funding["hover_text"] = funding.apply(
-            lambda row: f"{row['country_name']}<br>Total sum of funding is €{row['funding_sum']:,.0f}", axis=1
-        )
-
-        fig = px.scatter_geo(
-            funding,
-            locations="iso_alpha",
-            locationmode="ISO-3",
-            size="funding_sum",
-            hover_name="country_name",
-            custom_data=["hover_text"],
-            projection="natural earth",
-            title=f"Net EC Contribution ({start_year}–{end_year})",
-            size_max=50
-     )
-
-        fig.update_traces(hovertemplate="%{customdata[0]}")
-        fig.update_geos(showcountries=True, countrycolor="LightGray", showcoastlines=True, coastlinecolor="LightGray")
-        fig.update_layout(margin={"r": 0, "t": 50, "l": 0, "b": 0}, height=600)
-
-        return ui.HTML(fig.to_html(include_plotlyjs="cdn"))
-    
-    @output
-    @render.ui
-    def citation_plot():
-        selected_cat = input.citation_category()
-        data = category_year_stats[category_year_stats['category'] == selected_cat]
-
-        if data.empty:
-            return ui.HTML("<p>No data available for this category.</p>")
-
-        fig = px.line(
-            data,
-            x='Year',
-            y='publication_count',
-            markers=True,
-            title=f'{selected_cat.capitalize()} Publications Over Time',
-            labels={'publication_count': 'Number of Publications'}
-        )
-        fig.add_bar(
-            x=data['Year'],
-            y=data['total_citations'],
-            name='Total Citations',
-            yaxis='y2',
-            marker_color='orange',
-            opacity=0.5
-        )
-        fig.update_layout(
-            height=500,
-            margin={"r": 0, "t": 50, "l": 0, "b": 0},
-            yaxis=dict(title='Number of Publications'),
-            yaxis2=dict(
-                title='Total Citations',
-                overlaying='y',
-                side='right'
-            ),
-            legend=dict(x=0.01, y=0.99)
-        )
-        return ui.HTML(fig.to_html(include_plotlyjs="cdn"))
-    
-    @output
-    @render.ui
-    def citation_pie():
-        selected_year = int(input.citation_year())
-        data = citations_per_topic_year[citations_per_topic_year['Year'] == selected_year]
-        if data.empty:
-            return ui.HTML("<p>No data for this year.</p>")
-
-        fig = px.pie(
-            data,
-            names='category',
-            values='total_citations',
-            title=f'Citations by Research Topic in {selected_year}',
-            hole=0.3
-        )
-        fig.update_traces(textinfo='percent+label')
-        fig.update_layout(height=500)
-        return ui.HTML(fig.to_html(include_plotlyjs='cdn'))
-
-# App maken
-app = App(app_ui, server) 
-
+# App creation
+app = App(app_ui, server)
