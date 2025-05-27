@@ -8,31 +8,26 @@ from panels.clustering_panel import clustering_panel, register_clustering_server
 from panels.network_links_panel import network_links_panel, register_network_links_server
 from panels.research_impact_panel import research_impact_panel, register_research_impact_server
 from panels.explanatory_panel import explanatory_data_panel, register_explanatory_data_server
-from panels.topological_data_analysis_panel import topological_data_analysis_panel
 
 # Optionally: introduction_panel and its server, if you have them
 from panels.introduction_panel import introduction_panel
 
-
 # Data loading
-category_per_year = pd.read_csv("./data/category_per_year.csv")
+category_per_year = pd.read_csv("data/category_per_year.csv")
 category_per_year['Year'] = category_per_year['Year'].astype(int)
 category_per_year['project_count'] = category_per_year['project_count'].astype(int)
 categories = sorted(category_per_year['category'].dropna().unique())
-category_counts = pd.read_csv("./data/category_counts.csv")  
+category_counts = pd.read_csv("data/category_counts.csv")  
 years = sorted(category_counts['startYear'].dropna().unique())
-merged_funding = pd.read_csv("./data/merged_funding.csv")
-df_organization = pd.read_csv("./data/df_organization.csv", low_memory=False)
-df_project = pd.read_csv("./data/df_project.csv")
-category_year_stats = pd.read_csv("./data/category_year_stats.csv")
-citations_per_topic_year = pd.read_csv("./data/citations_per_topic_year.csv")
-cluster_df = pd.read_csv("./data/clusters_df.csv")  # Assuming this is the clustering data
+merged_funding = pd.read_csv("data/merged_funding.csv")
+df_organization = pd.read_csv("data/df_organization.csv", low_memory=False)
+df_project = pd.read_csv("data/df_project.csv")
+category_year_stats = pd.read_csv("data/category_year_stats.csv")
+citations_per_topic_year = pd.read_csv("data/citations_per_topic_year.csv")
+cluster_df = pd.read_csv("data/clusters_df.csv")  # Assuming this is the clustering data
 clusters = sorted(cluster_df['cluster'].dropna().unique())
-network_df = pd.read_csv("./data/network_df.csv", index_col=0)  # Assuming this is the network data
-df_regression = pd.read_csv("./data/regression_dataset.csv")  # Assuming this is the regression data
-
-
-
+network_df = pd.read_csv("data/network_df.csv", index_col=0)  # Assuming this is the network data
+df_regression = pd.read_csv("data/regression_dataset.csv")  # Assuming this is the regression data
 
 # UI
 app_ui = ui.page_fluid(
@@ -41,7 +36,6 @@ app_ui = ui.page_fluid(
         analyse_panel(categories, years),
         funding_map_panel(years),
         clustering_panel(years, ["K-means", "Agglomerative", "HDBSCAN"]),
-        topological_data_analysis_panel(), 
         network_links_panel(clusters, years),
         research_impact_panel(categories, years),
         explanatory_data_panel(categories)
@@ -73,4 +67,4 @@ def server(input, output, session):
     # If you have an introduction_panel server, call it here as well
 
 # App creation
-app = App(app_ui, server) 
+app = App(app_ui, server)   

@@ -10,7 +10,7 @@ def introduction_panel():
             *[
                 ui.div(
                     ui.tags.img(
-                        src=get_image_base64(f"www/{naam}.jpg"),
+                        src=get_image_base64(f"app/www/{naam}.jpg"),
                         style="width: 150px; height: auto; border-radius: 50%;"
                     ),
                     ui.p(naam, style="text-align: center; font-weight: bold;"),

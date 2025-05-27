@@ -6,8 +6,13 @@ from utils.layout import panel_with_banner
 def funding_map_panel(years):
     return panel_with_banner(
         "Funding Map",
-        ui.input_slider("funding_year_start", "Start Year", min(years), max(years), min(years)),
-        ui.input_slider("funding_year_end", "End Year", min(years), max(years), max(years)),
+        ui.input_slider(
+            "funding_year_range",
+            "Year Range",
+            min(years),
+            max(years),
+            value=(min(years), max(years)),
+        ),
         ui.output_ui("funding_map")
     )
 
@@ -27,8 +32,7 @@ def register_funding_map_server(output, input, data):
     @output
     @render.ui
     def funding_map():
-        start_year = input.funding_year_start()
-        end_year = input.funding_year_end()
+        start_year, end_year = input.funding_year_range()
         # Filter organizations by project start year
         df_project['startYear'] = pd.to_datetime(df_project['startDate'], errors='coerce').dt.year
         orgs = df_organization.copy()
