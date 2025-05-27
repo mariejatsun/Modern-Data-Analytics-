@@ -1,8 +1,9 @@
 from shiny import ui
 from utils.methods import get_image_base64
+from utils.layout import panel_with_banner
 
 def introduction_panel():
-    return ui.nav_panel(
+    return panel_with_banner(
         "Introduction",
         ui.div(
             {"style": "display: flex; justify-content: space-around; margin-top: 30px;"},

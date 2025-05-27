@@ -1,8 +1,9 @@
 from shiny import ui, render
 import plotly.express as px
+from utils.layout import panel_with_banner
 
 def analyse_panel(categories, years):
-    return ui.nav_panel(
+    return panel_with_banner(
         "Analyse of research projects",
         ui.input_select("category", "Select a category",
                         {cat: cat for cat in categories},

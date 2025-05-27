@@ -5,9 +5,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+from utils.layout import panel_with_banner
 
 def explanatory_data_panel(categories):
-    return ui.nav_panel(
+    return panel_with_banner(
         "Explanatory Data",
         ui.h4("Histograms"),
         ui.output_plot("histograms"),

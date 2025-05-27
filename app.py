@@ -1,7 +1,6 @@
 from shiny import App, ui
 import pandas as pd
 
-
 # Import panel UI and server registration functions
 from panels.analyse_panel import analyse_panel, register_analyse_server
 from panels.funding_map_panel import funding_map_panel, register_funding_map_server
@@ -13,6 +12,7 @@ from panels.topological_data_analysis_panel import topological_data_analysis_pan
 
 # Optionally: introduction_panel and its server, if you have them
 from panels.introduction_panel import introduction_panel
+
 
 # Data loading
 category_per_year = pd.read_csv("./data/category_per_year.csv")
@@ -30,6 +30,8 @@ cluster_df = pd.read_csv("./data/clusters_df.csv")  # Assuming this is the clust
 clusters = sorted(cluster_df['cluster'].dropna().unique())
 network_df = pd.read_csv("./data/network_df.csv", index_col=0)  # Assuming this is the network data
 df_regression = pd.read_csv("./data/regression_dataset.csv")  # Assuming this is the regression data
+
+
 
 
 # UI

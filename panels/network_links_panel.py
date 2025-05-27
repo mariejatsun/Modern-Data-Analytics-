@@ -3,9 +3,10 @@ import plotly.graph_objects as go
 from ipywidgets import IntRangeSlider
 from sklearn.cluster import KMeans
 from utils.methods import get_lat_lon_from_iso2
+from utils.layout import panel_with_banner
 
 def network_links_panel(clusters, years):
-    return ui.nav_panel(
+    return panel_with_banner(
         "Collaboration Network",
         ui.input_select("network_year_range", "Select year range", 
                         {f"{y}": f"{y}" for y in years}, 

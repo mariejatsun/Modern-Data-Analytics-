@@ -1,9 +1,10 @@
 from shiny import ui, render
 import plotly.express as px
 import pandas as pd
+from utils.layout import panel_with_banner
 
 def funding_map_panel(years):
-    return ui.nav_panel(
+    return panel_with_banner(
         "Funding Map",
         ui.input_slider("funding_year_start", "Start Year", min(years), max(years), min(years)),
         ui.input_slider("funding_year_end", "End Year", min(years), max(years), max(years)),

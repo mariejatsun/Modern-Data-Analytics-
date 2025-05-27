@@ -3,9 +3,10 @@ import plotly.express as px
 from sklearn.cluster import KMeans, AgglomerativeClustering
 import hdbscan
 import pandas as pd
+from utils.layout import panel_with_banner
 
 def clustering_panel(years, methods):
-    return ui.nav_panel(
+    return panel_with_banner(
         "Clustering",
         ui.input_select("clustering_year", "Select year", {str(y): str(y) for y in years}),
         ui.input_select("clustering_method", "Select method", {m: m for m in methods}),
